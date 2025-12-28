@@ -3,59 +3,62 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Author - Book Library</title>
+  <title>Vtranslation — Editor</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-    <h1>Authoring Console</h1>
-    <div class="controls">
-      <a href="index.html">Library</a>
+  <header class="topbar">
+    <h1>Vtranslation — Editor</h1>
+    <div class="auth">
+      <input id="pat" type="password" placeholder="GitHub Personal Access Token (PAT)" aria-label="GitHub PAT">
+      <button id="connectBtn">Connect</button>
+      <button id="disconnectBtn" style="display:none">Disconnect</button>
+      <div id="authStatus" class="muted">Not connected</div>
     </div>
   </header>
-  <main style="display:flex;gap:18px;padding:20px;">
-    <section style="width:280px;">
-      <div style="margin-bottom:12px">
-        <button id="create-book">+ New Book</button>
-      </div>
-      <div id="books-list"></div>
+
+  <main class="container">
+    <section class="instructions">
+      <h2>Publishing via GitHub</h2>
+      <p>To publish directly from this editor you need a GitHub Personal Access Token (PAT). Create a token at <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a>. The token should have <strong>repo</strong> scope (full control of private repositories if needed).</p>
+      <p>Paste the token into the field above and click <strong>Connect</strong>. The token is stored only in this browser session (sessionStorage) and never sent to third parties except GitHub's API.</p>
     </section>
-    <section style="flex:1;background:#fff;padding:12px;border-radius:8px;min-height:480px;">
-      <div id="editor-empty">Select a book or create a new one to begin.</div>
-      <div id="book-editor" class="hidden">
-        <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
-          <input id="book-title" placeholder="Book title" style="flex:1;padding:8px;border:1px solid #e6edf3;border-radius:6px" />
-          <input id="book-author" placeholder="Author" style="width:180px;padding:8px;border:1px solid #e6edf3;border-radius:6px" />
-        </div>
-        <div style="display:flex;gap:12px;margin-bottom:12px;align-items:center">
-          <input type="file" id="cover-input" accept="image/*" />
-          <img id="cover-preview" src="" alt="cover preview" style="height:80px;border-radius:6px;display:none" />
-          <button id="save-book">Save</button>
-          <button id="export-book">Publish (Export ZIP)</button>
-          <button id="delete-book" style="background:#ef4444">Delete</button>
-        </div>
 
-        <hr />
-        <h3>Chapters</h3>
-        <div style="display:flex;gap:8px;margin-bottom:8px">
-          <input id="chapter-title" placeholder="Chapter title" style="flex:1;padding:8px;border:1px solid #e6edf3;border-radius:6px" />
-          <button id="add-chapter">Add Chapter</button>
-        </div>
-        <div id="chapters-list" style="margin-bottom:12px"></div>
+    <section class="editor">
+      <label>File path (relative to repo root):
+        <input id="filePath" type="text" placeholder="books/my-book/book.json">
+      </label>
 
-        <div id="chapter-editor" class="hidden">
-          <input id="edit-chapter-title" placeholder="Chapter title" style="width:100%;padding:8px;border:1px solid #e6edf3;border-radius:6px;margin-bottom:8px" />
-          <textarea id="edit-chapter-content" rows="10" style="width:100%;padding:8px;border:1px solid #e6edf3;border-radius:6px"></textarea>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button id="save-chapter">Save Chapter</button>
-            <button id="cancel-chapter">Cancel</button>
-          </div>
-        </div>
+      <label>Book title:
+        <input id="bookTitle" type="text" placeholder="My Book Title">
+      </label>
+
+      <label>Author:
+        <input id="bookAuthor" type="text" placeholder="Author Name">
+      </label>
+
+      <label>Content (JSON or text):
+        <textarea id="fileContent" rows="18" placeholder='{"chapters": []}'></textarea>
+      </label>
+
+      <div class="actions">
+        <button id="publishBtn">Publish File to GitHub</button>
+        <button id="publishAndUpdateBooksBtn">Publish + Update books.json</button>
       </div>
+
+      <div id="result" class="result muted"></div>
+    </section>
+
+    <section class="notes">
+      <h3>Notes</h3>
+      <ul>
+        <li>The editor will create or update files on the <code>main</code> branch of the repository <strong>Mukuro-Rokudo/Vtranslation-mini-app</strong>.</li>
+        <li>When updating books.json, an entry for the published file will be added or updated with the title, author and timestamp.</li>
+        <li>To disconnect, click <em>Disconnect</em>. This clears the token from sessionStorage.</li>
+      </ul>
     </section>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="editor.js"></script>
 </body>
 </html>
