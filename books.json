@@ -1,0 +1,16 @@
+[
+  {
+    "title": "Sample PDF Book",
+    "author": "Example Author",
+    "file": "books/sample-book.pdf",
+    "cover": "books/sample-cover.jpg",
+    "tags": ["sample","pdf"]
+  },
+  {
+    "title": "Plain Text Sample",
+    "author": "Writer",
+    "file": "books/sample.txt",
+    "cover": "",
+    "tags": ["text","sample"]
+  }
+]

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Book Library</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Book Library</h1>
+    <div class="controls">
+      <input id="search" placeholder="Search by title, author, tag..." />
+      <button id="add-book-btn" onclick="window.location='#add'" title="Add books by uploading to /books and adding an entry in books.json">How to add</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="library"></section>
+  </main>
+
+  <!-- Reader modal -->
+  <div id="reader" class="hidden">
+    <div class="reader-backdrop" onclick="closeReader()"></div>
+    <div class="reader-panel">
+      <header class="reader-header">
+        <button onclick="closeReader()">Close</button>
+        <div id="reader-title"></div>
+      </header>
+      <div id="reader-content" class="reader-content">
+        <!-- content populated by app.js -->
+      </div>
+      <footer class="reader-footer">
+        <button id="download-btn">Download</button>
+      </footer>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
