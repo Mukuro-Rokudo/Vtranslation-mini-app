@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Digital Library</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg: var(--tg-theme-bg-color, #ffffff);
+            --text: var(--tg-theme-text-color, #222);
+            --hint: var(--tg-theme-hint-color, #777);
+            --btn: var(--tg-theme-button-color, #248bed);
+            --btn-text: var(--tg-theme-button-text-color, #ffffff);
+        }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .shelf { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .book-card { 
+            background: var(--hint); opacity: 0.9; padding: 20px; border-radius: 10px; 
+            text-align: center; color: white; cursor: pointer; height: 100px;
+            display: flex; align-items: center; justify-content: center; font-weight: bold;
+        }
+        .hidden { display: none; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        button { background: var(--btn); color: var(--btn-text); border: none; padding: 10px; border-radius: 5px; cursor: pointer; }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        .chapter-list { list-style: none; padding: 0; }
+        .chapter-item { padding: 15px; border-bottom: 1px solid var(--hint); cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="shelf-screen">
+        <div class="header">
+            <h2>My Bookshelf</h2>
+            <button onclick="showAdmin()">Edit Books</button>
+        </div>
+        <div class="shelf" id="book-container">
+            </div>
+    </div>
+
+    <div id="chapter-screen" class="hidden">
+        <button onclick="showShelf()">← Back to Shelf</button>
+        <h2 id="current-book-title">Book Title</h2>
+        <div class="chapter-list" id="chapter-container"></div>
+    </div>
+
+    <div id="admin-screen" class="hidden">
+        <button onclick="showShelf()">Cancel</button>
+        <h2>Edit Library Data</h2>
+        <p>Edit the text below to change your books. (Advanced Users)</p>
+        <textarea id="library-data" rows="15"></textarea>
+        <button onclick="saveData()">Save Changes</button>
+    </div>
+
+    <script>
+        // Initial Data (You can change this text in the app)
+        let library = [
+            { id: 1, title: "Adventure Tales", chapters: ["Chapter 1: The Beginning", "Chapter 2: The Forest", "Chapter 3: The End"] },
+            { id: 2, title: "Cooking 101", chapters: ["Intro to Salt", "Boiling Water"] }
+        ];
+
+        // Load data from phone storage if it exists
+        if(localStorage.getItem('myLibrary')) {
+            library = JSON.parse(localStorage.getItem('myLibrary'));
+        }
+
+        function renderShelf() {
+            const container = document.getElementById('book-container');
+            container.innerHTML = '';
+            library.forEach((book, index) => {
+                container.innerHTML += `<div class="book-card" onclick="showChapters(${index})">${book.title}</div>`;
+            });
+        }
+
+        function showChapters(index) {
+            document.getElementById('shelf-screen').classList.add('hidden');
+            document.getElementById('chapter-screen').classList.remove('hidden');
+            const book = library[index];
+            document.getElementById('current-book-title').innerText = book.title;
+            const container = document.getElementById('chapter-container');
+            container.innerHTML = '';
+            book.chapters.forEach(ch => {
+                container.innerHTML += `<div class="chapter-item">${ch}</div>`;
+            });
+        }
+
+        function showShelf() {
+            document.getElementById('chapter-screen').classList.add('hidden');
+            document.getElementById('admin-screen').classList.add('hidden');
+            document.getElementById('shelf-screen').classList.remove('hidden');
+            renderShelf();
+        }
+
+        function showAdmin() {
+            document.getElementById('shelf-screen').classList.add('hidden');
+            document.getElementById('admin-screen').classList.remove('hidden');
+            document.getElementById('library-data').value = JSON.stringify(library, null, 2);
+        }
+
+        function saveData() {
+            try {
+                library = JSON.parse(document.getElementById('library-data').value);
+                localStorage.setItem('myLibrary', JSON.stringify(library));
+                alert("Saved successfully!");
+                showShelf();
+            } catch(e) {
+                alert("Error in format. Make sure the text is correct.");
+            }
+        }
+
+        // Initialize
+        Telegram.WebApp.ready();
+        renderShelf();
+    </script>
+</body>
+</html>
